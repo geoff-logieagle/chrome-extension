@@ -1,0 +1,39 @@
+{
+    "manifest_version": 3,
+    "name": "SpeakMail V2",
+    "description": "Chrome Extension For Video Recorder",
+    "version": "1.0.0",
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "camera.js",
+                "preview.html",
+                "tabcamera.js",
+                "preview.js"
+            ],
+            "matches": [
+                "https://*/*",
+                "http://*/*"
+            ]
+        }
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "action": {},
+    "host_permissions": [
+        "https://*/*",
+        "http://*/*"
+    ],
+    "permissions": [
+        "tabCapture",
+        "offscreen",
+        "activeTab",
+        "tabs",
+        "unlimitedStorage",
+        "storage",
+        "scripting",
+        "desktopCapture",
+        "webNavigation"
+    ]
+}
