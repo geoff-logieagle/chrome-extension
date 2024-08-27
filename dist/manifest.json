@@ -6,10 +6,14 @@
     "web_accessible_resources": [
         {
             "resources": [
+                "outputcamera.html",
+                "outputcamera.js",
                 "camera.js",
                 "preview.html",
                 "tabcamera.js",
-                "preview.js"
+                "preview.js",
+                "permission.html",
+                "permission.js"
             ],
             "matches": [
                 "https://*/*",

@@ -14,7 +14,8 @@
     margin: 0px !important;
 }
 
-#camera-root .react-draggable {
+#camera-root .react-draggable,
+#tab-camera-root .react-draggable {
     position: absolute;
     z-index: 2147482646;
 }
@@ -55,6 +56,7 @@
     align-items: center;
     justify-content: center;
     opacity: 0;
+    visibility: hidden;
 }
 
 #ring {
@@ -347,4 +349,18 @@
 .btn-1::after {
     background: linear-gradient(135deg, #feb47b 0%, #ff7e5f 100%);
     clip-path: polygon(50% 50%, 100% 100%, 0 100%);
+}
+
+.button .downloadButton {
+    display: block;
+    height: 50px;
+    width: 200px;
+    line-height: 50px;
+    color: #fff;
+    font-size: 24px;
+    text-decoration: none;
+    text-align: center;
+    text-transform: uppercase;
+    background: #f3a;
+
 }

@@ -8,9 +8,11 @@ if (!element) {
     const container = document.createElement('div');
     container.id = 'camera-root';
     document.body.appendChild(container);
-    const root = createRoot(container)
-    root.render(<Camera />)
-
+    // const iframe = document.createElement('iframe');
+    // iframe.src = chrome.runtime.getURL("permission.html");
+    // iframe.setAttribute('allow', 'camera; microphone; display-capture');
+    // iframe.style.visibility = 'hidden';
+    // document.body.appendChild(iframe);
+    const root = createRoot(container);
+    root.render(<Camera />);
 }
-
-

@@ -34,9 +34,21 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     if (message.action === 'stopRecording' || message.action === 'sendingData') {
         await removeIframesFromAllTabs();
     }
-    
+
     if (message.action === 'deleteCamera') {
         await removeIframesFromAllTabs();
+    }
+
+    if (message.action === 'injectCamera') {
+        chrome.scripting.executeScript({
+            target: { tabId: activeCurrentTab },
+            func: () => {
+                console.log("dfgfd");
+                if (window.requestUserMedia) {
+                    window.requestUserMedia();
+                }
+            }
+        });
     }
 });
 

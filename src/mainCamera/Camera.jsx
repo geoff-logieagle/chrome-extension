@@ -1,6 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from "react";
 import Draggable from 'react-draggable';
-import { Rnd } from "react-rnd";
 import '../global.css';
 
 function Camera() {
@@ -15,54 +14,115 @@ function Camera() {
     const [displayStream, setDisplayStream] = useState(null);
     const countdownRef = useRef(null);
     const ringRef = useRef(null);
-    const vcOverlay = useRef(null);
+    const vcOverlay = useRef(null)
+    const permissionCheck = useRef(null);
 
-    useEffect(() => {
-        async function requestUserMedia() {
-            const [videoStream, audioStream] = await Promise.all([
-                navigator.mediaDevices.getUserMedia({ video: true })
-                    .then(stream => {
-                        return stream;
-                    })
-                    .catch(() => null),
-                navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true } })
-                    .then(stream => {
-                        return stream;
-                    })
-                    .catch(() => null)
-            ]);
-
-            const tracks = [];
-            const audiotrack = [];
-
-            if (videoStream && audioStream) {
-                tracks.push(...videoStream.getVideoTracks());
-                audiotrack.push(...audioStream.getAudioTracks())
-                const videoStreamOnly = new MediaStream(tracks);
-                const audioStreamOnly = new MediaStream(audiotrack);
-                setCameraStream(videoStreamOnly);
-                setAudioStream(audioStreamOnly);
-                if (videoRef.current) {
-                    videoRef.current.srcObject = videoStream;
-                }
-
+    async function requestUserMedia() {
+        //     // const [videoStream, audioStream] = await Promise.all([
+        //     //     navigator.mediaDevices.getUserMedia({ video: true })
+        //     //         .then(stream => {
+        //     //             return stream;
+        //     //         })
+        //     //         .catch(() => null),
+        //     //     navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true } })
+        //     //         .then(stream => {
+        //     //             return stream;
+        //     //         })
+        //     //         .catch(() => null)
+        //     // ]);
+        //     // console.log(stream);const { qualityValue } = await chrome.storage.local.get(["qualityValue"]);
+        const result = await chrome.storage.local.get(['videoStream', 'audioStream']);
+        const videoStream = result.videoStream;
+        const audioStream = result.audioStream;
+        console.log(result);
+        console.log(result);
+        const tracks = [];
+        const audiotrack = [];
+        if (videoStream && audioStream) {
+            tracks.push(...videoStream.getVideoTracks());
+            audiotrack.push(...audioStream.getAudioTracks())
+            const videoStreamOnly = new MediaStream(tracks);
+            const audioStreamOnly = new MediaStream(audiotrack);
+            setCameraStream(videoStreamOnly);
+            setAudioStream(audioStreamOnly);
+            if (videoRef.current) {
+                videoRef.current.srcObject = videoStream;
             }
-            if (videoStream && !audioStream) {
-                tracks.push(...videoStream.getVideoTracks());
-                const videoStreamOnly = new MediaStream(tracks);
-                setCameraStream(videoStreamOnly);
-                if (videoRef.current) {
-                    videoRef.current.srcObject = videoStream;
-                }
-            }
-            if (!videoStream && audioStream) {
-                audiotrack.push(...audioStream.getAudioTracks());
-                const audioStreamOnly = new MediaStream(audiotrack);
-                setAudioStream(audioStreamOnly);
+
+        }
+        if (videoStream && !audioStream) {
+            tracks.push(...videoStream.getVideoTracks());
+            const videoStreamOnly = new MediaStream(tracks);
+            setCameraStream(videoStreamOnly);
+            if (videoRef.current) {
+                videoRef.current.srcObject = videoStream;
             }
         }
-        requestUserMedia();
-    }, []);
+        if (!videoStream && audioStream) {
+            audiotrack.push(...audioStream.getAudioTracks());
+            const audioStreamOnly = new MediaStream(audiotrack);
+            setAudioStream(audioStreamOnly);
+        }
+    }
+
+    useEffect(() => {
+        window.requestUserMedia = requestUserMedia;
+        return () => {
+            delete window.requestUserMedia;
+        };
+    }, [requestUserMedia]);
+
+    // useEffect(() => {
+    //     permissionCheck.current.src = chrome.runtime.getURL("permission.html");
+    //     // async function requestUserMedia() {
+    //     //     //     // const [videoStream, audioStream] = await Promise.all([
+    //     //     //     //     navigator.mediaDevices.getUserMedia({ video: true })
+    //     //     //     //         .then(stream => {
+    //     //     //     //             return stream;
+    //     //     //     //         })
+    //     //     //     //         .catch(() => null),
+    //     //     //     //     navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true } })
+    //     //     //     //         .then(stream => {
+    //     //     //     //             return stream;
+    //     //     //     //         })
+    //     //     //     //         .catch(() => null)
+    //     //     //     // ]);
+    //     //     //     // console.log(stream);const { qualityValue } = await chrome.storage.local.get(["qualityValue"]);
+    //     //     const result = await chrome.storage.local.get(['videoStream', 'audioStream']);
+    //     //     const videoStream = result.videoStream;
+    //     //     const audioStream = result.audioStream;
+    //     //     console.log(result);
+    //     //     const tracks = [];
+    //     //     const audiotrack = [];
+    //     //     if (videoStream && audioStream) {
+    //     //         tracks.push(...videoStream.getVideoTracks());
+    //     //         audiotrack.push(...audioStream.getAudioTracks())
+    //     //         const videoStreamOnly = new MediaStream(tracks);
+    //     //         const audioStreamOnly = new MediaStream(audiotrack);
+    //     //         setCameraStream(videoStreamOnly);
+    //     //         setAudioStream(audioStreamOnly);
+    //     //         if (videoRef.current) {
+    //     //             videoRef.current.srcObject = videoStream;
+    //     //         }
+
+    //     //     }
+    //     //     if (videoStream && !audioStream) {
+    //     //         tracks.push(...videoStream.getVideoTracks());
+    //     //         const videoStreamOnly = new MediaStream(tracks);
+    //     //         setCameraStream(videoStreamOnly);
+    //     //         if (videoRef.current) {
+    //     //             videoRef.current.srcObject = videoStream;
+    //     //         }
+    //     //     }
+    //     //     if (!videoStream && audioStream) {
+    //     //         audiotrack.push(...audioStream.getAudioTracks());
+    //     //         const audioStreamOnly = new MediaStream(audiotrack);
+    //     //         setAudioStream(audioStreamOnly);
+    //     //     }
+    //     // }
+    //     // requestUserMedia();
+    // }, []);
+
 
     useEffect(() => {
         window.handleStopRecording = handleStopRecording;
@@ -70,6 +130,11 @@ function Camera() {
             delete window.handleStopRecording;
         };
     }, [isRecording]);
+
+
+
+
+ 
 
     const handleStartRecording = async () => {
         debugger;
@@ -117,6 +182,7 @@ function Camera() {
             span.style.transform = "scale(0)";
         });
         vcOverlay.current.style.opacity = 1;
+        vcOverlay.current.style.visibility = 'visible';
         ringRef.current.style.opacity = 1;
 
         texts[0].style.opacity = 1;
@@ -135,7 +201,7 @@ function Camera() {
                     texts[2].style.opacity = 0;
                     ringRef.current.style.opacity = 0;
                     vcOverlay.current.style.opacity = 0;
-
+                    vcOverlay.current.style.visibility = 'hidden';
                     mediaRecorder.start();
                     chrome.runtime.sendMessage({
                         action: "startedRecording",
@@ -145,9 +211,6 @@ function Camera() {
             }, 1000);
 
         }, 1000);
-
-
-
         // mediaRecorder.start();
         // chrome.runtime.sendMessage({
         //     action: "startedRecording",
@@ -175,15 +238,18 @@ function Camera() {
     };
 
     const handleStopRecording = async () => {
+        debugger
         if (mediaRecorderRef.current) {
             mediaRecorderRef.current.stop();
             mediaRecorderRef.current.onstop = async () => {
+                console.log(recordedChunksRef.current);
                 const blob = new Blob(recordedChunksRef.current, { type: 'video/mp4' });
                 const bas364 = await fetchBlob(URL.createObjectURL(blob));
-                recordedChunksRef.current = [];
-                mediaRecorderRef.current = null;
                 setIsRecording(false);
                 RecordingStarted.current = false;
+                chrome.runtime.sendMessage({ action: "sendingData", text: bas364 });
+                recordedChunksRef.current = [];
+                mediaRecorderRef.current = null;
                 [displayStream, cameraStream, AudioStream].forEach(stream => {
                     if (stream) {
                         stream.getTracks().forEach(track => track.stop());
@@ -192,15 +258,26 @@ function Camera() {
                 setDisplayStream(null);
                 setCameraStream(null);
                 setAudioStream(null);
-                chrome.runtime.sendMessage({ action: "sendingData", text: bas364 });
             };
         }
     };
 
+    // document.addEventListener("click", async (e) => {
+    //     debugger;
+    //         var cameraElement = document.getElementById('higherOrder');
+    //         var controlsEle = document.querySelector('.vc-controls');
+    //         var controls = document.querySelector('.glass-card');
+
+    //         if ((cameraElement && !cameraElement?.contains(e.target) && !controlsEle?.contains(e.target) && !controls?.contains(e.target)) && !RecordingStarted.current) {
+    //             chrome.runtime.sendMessage({ action: "deleteCamera" });
+    //         }
+    // });
+
     return (
         <>
-            <Rnd>
-                <div style={{ margin: '0px !important' }} ref={draggableRef} id="higherOrder">
+            <iframe ref={permissionCheck} src={chrome.runtime.getURL("permission.html")} style={{ display: 'none' }} allow="camera;microphone"></iframe>
+            <Draggable bounds='parent'>
+                <div ref={draggableRef}>
                     <div className="circular-img" id='circular-img'>
                         <video ref={videoRef} className='getTheVideo' width="100%" height="100%" autoPlay></video>
                     </div>
@@ -238,26 +315,21 @@ function Camera() {
                         </div>
                     </div>
                 </div>
-            </Rnd>
+            </Draggable>
             {
                 !isRecording && <div className="recorder-container">
                     <div className="glass-card">
                         <div className="card-content">
                             <h1>Welcome</h1>
                             <div className="record-button-container">
-                                <button className="cool-button btn-1 ss" data-disable={isRecording ? 'disable' : 'notdisable'} onClick={handleStartRecording}>Start</button>
+                                <button className="cool-button btn-1" data-disable={isRecording ? 'disable' : 'notdisable'} onClick={handleStartRecording}>Start</button>
                             </div>
                         </div>
                     </div>
                 </div >
             }
-
-
             <div class="vc-overlay" ref={vcOverlay}><div ref={ringRef} id="ring"></div><div ref={countdownRef} id="countdown"><span>3</span><span >2</span><span >1</span></div></div>
         </>
-
-
-
     )
 }
 
