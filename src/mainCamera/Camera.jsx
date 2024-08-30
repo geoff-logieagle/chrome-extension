@@ -1,8 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import Draggable from 'react-draggable';
 import '../global.css';
+import { StreamContext } from "../StreamProvider.jsx";
 
 function Camera() {
+    const [stream, setStream] = useContext(StreamContext);
     const draggableRef = useRef(null);
     const videoRef = useRef(null);
     const mediaRecorderRef = useRef(null);
@@ -17,111 +19,54 @@ function Camera() {
     const vcOverlay = useRef(null)
     const permissionCheck = useRef(null);
 
-    async function requestUserMedia() {
-        //     // const [videoStream, audioStream] = await Promise.all([
-        //     //     navigator.mediaDevices.getUserMedia({ video: true })
-        //     //         .then(stream => {
-        //     //             return stream;
-        //     //         })
-        //     //         .catch(() => null),
-        //     //     navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true } })
-        //     //         .then(stream => {
-        //     //             return stream;
-        //     //         })
-        //     //         .catch(() => null)
-        //     // ]);
-        //     // console.log(stream);const { qualityValue } = await chrome.storage.local.get(["qualityValue"]);
-        const result = await chrome.storage.local.get(['videoStream', 'audioStream']);
-        const videoStream = result.videoStream;
-        const audioStream = result.audioStream;
-        console.log(result);
-        console.log(result);
-        const tracks = [];
-        const audiotrack = [];
-        if (videoStream && audioStream) {
-            tracks.push(...videoStream.getVideoTracks());
-            audiotrack.push(...audioStream.getAudioTracks())
-            const videoStreamOnly = new MediaStream(tracks);
-            const audioStreamOnly = new MediaStream(audiotrack);
-            setCameraStream(videoStreamOnly);
-            setAudioStream(audioStreamOnly);
-            if (videoRef.current) {
-                videoRef.current.srcObject = videoStream;
-            }
-
-        }
-        if (videoStream && !audioStream) {
-            tracks.push(...videoStream.getVideoTracks());
-            const videoStreamOnly = new MediaStream(tracks);
-            setCameraStream(videoStreamOnly);
-            if (videoRef.current) {
-                videoRef.current.srcObject = videoStream;
-            }
-        }
-        if (!videoStream && audioStream) {
-            audiotrack.push(...audioStream.getAudioTracks());
-            const audioStreamOnly = new MediaStream(audiotrack);
-            setAudioStream(audioStreamOnly);
-        }
-    }
-
     useEffect(() => {
-        window.requestUserMedia = requestUserMedia;
-        return () => {
-            delete window.requestUserMedia;
-        };
-    }, [requestUserMedia]);
+        async function requestUserMedia() {
+            if (stream.videoStream || stream.audioStream) {
+                const [videoStream, audioStream] = await Promise.all([
+                    navigator.mediaDevices.getUserMedia({ video: stream.videoStream })
+                        .then(stream => {
+                            return stream;
+                        })
+                        .catch(() => null),
+                    // { echoCancellation: true }
+                    navigator.mediaDevices.getUserMedia({ audio: stream.audioStream })
+                        .then(stream => {
+                            return stream;
+                        })
+                        .catch(() => null)
+                ]);
 
-    // useEffect(() => {
-    //     permissionCheck.current.src = chrome.runtime.getURL("permission.html");
-    //     // async function requestUserMedia() {
-    //     //     //     // const [videoStream, audioStream] = await Promise.all([
-    //     //     //     //     navigator.mediaDevices.getUserMedia({ video: true })
-    //     //     //     //         .then(stream => {
-    //     //     //     //             return stream;
-    //     //     //     //         })
-    //     //     //     //         .catch(() => null),
-    //     //     //     //     navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true } })
-    //     //     //     //         .then(stream => {
-    //     //     //     //             return stream;
-    //     //     //     //         })
-    //     //     //     //         .catch(() => null)
-    //     //     //     // ]);
-    //     //     //     // console.log(stream);const { qualityValue } = await chrome.storage.local.get(["qualityValue"]);
-    //     //     const result = await chrome.storage.local.get(['videoStream', 'audioStream']);
-    //     //     const videoStream = result.videoStream;
-    //     //     const audioStream = result.audioStream;
-    //     //     console.log(result);
-    //     //     const tracks = [];
-    //     //     const audiotrack = [];
-    //     //     if (videoStream && audioStream) {
-    //     //         tracks.push(...videoStream.getVideoTracks());
-    //     //         audiotrack.push(...audioStream.getAudioTracks())
-    //     //         const videoStreamOnly = new MediaStream(tracks);
-    //     //         const audioStreamOnly = new MediaStream(audiotrack);
-    //     //         setCameraStream(videoStreamOnly);
-    //     //         setAudioStream(audioStreamOnly);
-    //     //         if (videoRef.current) {
-    //     //             videoRef.current.srcObject = videoStream;
-    //     //         }
+                const tracks = [];
+                const audiotrack = [];
+                if (videoStream && audioStream) {
+                    tracks.push(...videoStream.getVideoTracks());
+                    audiotrack.push(...audioStream.getAudioTracks())
+                    const videoStreamOnly = new MediaStream(tracks);
+                    const audioStreamOnly = new MediaStream(audiotrack);
+                    setCameraStream(videoStreamOnly);
+                    setAudioStream(audioStreamOnly);
+                    if (videoRef.current) {
+                        videoRef.current.srcObject = videoStream;
+                    }
 
-    //     //     }
-    //     //     if (videoStream && !audioStream) {
-    //     //         tracks.push(...videoStream.getVideoTracks());
-    //     //         const videoStreamOnly = new MediaStream(tracks);
-    //     //         setCameraStream(videoStreamOnly);
-    //     //         if (videoRef.current) {
-    //     //             videoRef.current.srcObject = videoStream;
-    //     //         }
-    //     //     }
-    //     //     if (!videoStream && audioStream) {
-    //     //         audiotrack.push(...audioStream.getAudioTracks());
-    //     //         const audioStreamOnly = new MediaStream(audiotrack);
-    //     //         setAudioStream(audioStreamOnly);
-    //     //     }
-    //     // }
-    //     // requestUserMedia();
-    // }, []);
+                }
+                if (videoStream && !audioStream) {
+                    tracks.push(...videoStream.getVideoTracks());
+                    const videoStreamOnly = new MediaStream(tracks);
+                    setCameraStream(videoStreamOnly);
+                    if (videoRef.current) {
+                        videoRef.current.srcObject = videoStream;
+                    }
+                }
+                if (!videoStream && audioStream) {
+                    audiotrack.push(...audioStream.getAudioTracks());
+                    const audioStreamOnly = new MediaStream(audiotrack);
+                    setAudioStream(audioStreamOnly);
+                }
+            }
+        }
+        requestUserMedia();
+    }, [stream]);
 
 
     useEffect(() => {
@@ -131,13 +76,7 @@ function Camera() {
         };
     }, [isRecording]);
 
-
-
-
- 
-
     const handleStartRecording = async () => {
-        debugger;
         const displayMediaStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
         setDisplayStream(displayMediaStream);
         const audioContext = new AudioContext();
@@ -275,7 +214,6 @@ function Camera() {
 
     return (
         <>
-            <iframe ref={permissionCheck} src={chrome.runtime.getURL("permission.html")} style={{ display: 'none' }} allow="camera;microphone"></iframe>
             <Draggable bounds='parent'>
                 <div ref={draggableRef}>
                     <div className="circular-img" id='circular-img'>
@@ -334,3 +272,4 @@ function Camera() {
 }
 
 export default Camera;
+

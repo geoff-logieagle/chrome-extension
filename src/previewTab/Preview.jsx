@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import '../global.css';
 
 function Preview() {
-    const [selectedType, setSelectedType] = useState(videoTypes[0]);
     const linkVideoRef = useRef(null);
     const blobObject = useRef(null);
     const videoTypes = [
@@ -12,6 +11,7 @@ function Preview() {
         'video/quicktime',
         'video/x-matroska'
     ];
+    const [selectedType, setSelectedType] = useState(videoTypes[0]);
     const downloadRef = useRef(null);
 
     const handleTypeChange = (event) => {
@@ -43,6 +43,7 @@ function Preview() {
     }
 
     chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+        debugger
         if (message.action === 'linkcamera') {
             linkVideoRef.current.src = message.text;
             const mimeType = "video/x-matroska;codecs=avc1,opus";

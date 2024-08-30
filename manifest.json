@@ -13,7 +13,8 @@
                 "tabcamera.js",
                 "preview.js",
                 "permission.html",
-                "permission.js"
+                "permission.js",
+                "MainContent.js"
             ],
             "matches": [
                 "https://*/*",
@@ -30,10 +31,10 @@
         "http://*/*"
     ],
     "permissions": [
-        "tabCapture",
-        "offscreen",
         "activeTab",
         "tabs",
+        "tabCapture",
+        "offscreen",
         "unlimitedStorage",
         "storage",
         "scripting",
