@@ -64,9 +64,9 @@ function Preview() {
 
     return (
         <>
-            <div style={{ width: '1200px', margin: '0 auto' }}>
+            <div style={{ width: '1200px', height: '600px', margin: '0 auto' }}>
                 <video ref={linkVideoRef} controls className='getTheVideo' width="100%" height="100%" autoPlay></video>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px', marginTop: '20px' }}>
                     <select style={{ borderRadius: '30px', padding: '10px' }} id="videoTypeSelect" value={selectedType} onChange={handleTypeChange}>
                         {videoTypes.map((type) => (
                             <option key={type} value={type}>

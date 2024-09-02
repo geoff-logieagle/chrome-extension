@@ -20,7 +20,7 @@ function Camera() {
     const spinnerRef = useRef(null);
 
     useEffect(() => {
-        spinnerRef.current.style.display = 'block'
+        // spinnerRef.current.style.display = 'block'
         async function requestUserMedia() {
             if (stream.videoStream || stream.audioStream) {
                 const [videoStream, audioStream] = await Promise.all([
@@ -39,7 +39,7 @@ function Camera() {
 
                 const tracks = [];
                 const audiotrack = [];
-                spinnerRef.current.style.display = 'none'
+                 spinnerRef.current.style.display = 'none'
                 if (videoStream && audioStream) {
                     tracks.push(...videoStream.getVideoTracks());
                     audiotrack.push(...audioStream.getAudioTracks())
@@ -212,7 +212,7 @@ function Camera() {
         <>
             <Draggable bounds='parent'>
                 <div ref={draggableRef}>
-                    <div class="spinner" ref={spinnerRef}></div>
+                    <div class="loader" ref={spinnerRef}></div>
                     <div className="circular-img" id='circular-img'>
                         <video ref={videoRef} className='getTheVideo' width="100%" height="100%" autoPlay></video>
                     </div>
