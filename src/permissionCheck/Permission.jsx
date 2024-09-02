@@ -30,10 +30,8 @@ const Permission = () => {
                     microphonePermission.state === "granted"
                 );
 
-                
-            } 
-            
-            
+
+            }
             else {
                 // Post message to parent window
                 window.parent.postMessage(
@@ -53,48 +51,12 @@ const Permission = () => {
 
     // Enumerate devices
     const enumerateDevices = async (camGranted = true, micGranted = true) => {
+        debugger;
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
                 audio: micGranted,
                 video: camGranted,
             });
-
-            // const devicesInfo = await navigator.mediaDevices.enumerateDevices();
-
-            // let audioinput = [];
-            // let audiooutput = [];
-            // let videoinput = [];
-
-            // if (micGranted) {
-            //     // Filter by audio input
-            //     audioinput = devicesInfo
-            //         .filter((device) => device.kind === "audioinput")
-            //         .map((device) => ({
-            //             deviceId: device.deviceId,
-            //             label: device.label,
-            //         }));
-
-            //     // Filter by audio output and extract relevant properties
-            //     audiooutput = devicesInfo
-            //         .filter((device) => device.kind === "audiooutput")
-            //         .map((device) => ({
-            //             deviceId: device.deviceId,
-            //             label: device.label,
-            //         }));
-            // }
-
-            // if (camGranted) {
-            //     // Filter by video input and extract relevant properties
-            //     videoinput = devicesInfo
-            //         .filter((device) => device.kind === "videoinput")
-            //         .map((device) => ({
-            //             deviceId: device.deviceId,
-            //             label: device.label,
-            //         }));
-            // }
-
-
-            // Post message to parent window
             window.parent.postMessage(
                 {
                     type: "permissions",
@@ -104,8 +66,6 @@ const Permission = () => {
                 },
                 "*"
             );
-
-            // End the stream
             stream.getTracks().forEach(function (track) {
                 track.stop();
             });

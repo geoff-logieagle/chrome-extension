@@ -3,6 +3,7 @@ export const StreamContext = createContext();
 
 const StreamProvider = (props) => {
     debugger;
+    const [permission, setPermission] = useState(false);
     const [stream, setStream] = useState({
         videoStream: false,
         audioStream: false
@@ -13,6 +14,7 @@ const StreamProvider = (props) => {
             debugger;
             if (event.data.type === "permissions") {
                 setStream({ videoStream: event.data.cameraPermission, audioStream: event.data.microphonePermission });
+                setPermission(true)
             }
         };
         window.addEventListener("message", handleMessage);

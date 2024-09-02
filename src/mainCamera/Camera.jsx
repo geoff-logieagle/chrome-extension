@@ -5,6 +5,7 @@ import { StreamContext } from "../StreamProvider.jsx";
 
 function Camera() {
     const [stream, setStream] = useContext(StreamContext);
+    const [permission, setPermission] = useContext(StreamContext);
     const draggableRef = useRef(null);
     const videoRef = useRef(null);
     const mediaRecorderRef = useRef(null);
@@ -20,9 +21,9 @@ function Camera() {
     const spinnerRef = useRef(null);
 
     useEffect(() => {
-        // spinnerRef.current.style.display = 'block'
         async function requestUserMedia() {
-            if (stream.videoStream || stream.audioStream) {
+            debugger;
+            if (permission && stream.videoStream || stream.audioStream) {
                 const [videoStream, audioStream] = await Promise.all([
                     navigator.mediaDevices.getUserMedia({ video: stream.videoStream })
                         .then(stream => {
@@ -39,7 +40,7 @@ function Camera() {
 
                 const tracks = [];
                 const audiotrack = [];
-                 spinnerRef.current.style.display = 'none'
+                spinnerRef.current.style.display = 'none'
                 if (videoStream && audioStream) {
                     tracks.push(...videoStream.getVideoTracks());
                     audiotrack.push(...audioStream.getAudioTracks())
@@ -69,7 +70,7 @@ function Camera() {
             }
         }
         requestUserMedia();
-    }, [stream]);
+    }, [permission]);
 
 
     useEffect(() => {
