@@ -16,10 +16,11 @@ function Camera() {
     const [displayStream, setDisplayStream] = useState(null);
     const countdownRef = useRef(null);
     const ringRef = useRef(null);
-    const vcOverlay = useRef(null)
-    const permissionCheck = useRef(null);
+    const vcOverlay = useRef(null);
+    const spinnerRef = useRef(null);
 
     useEffect(() => {
+        spinnerRef.current.style.display = 'block'
         async function requestUserMedia() {
             if (stream.videoStream || stream.audioStream) {
                 const [videoStream, audioStream] = await Promise.all([
@@ -38,6 +39,7 @@ function Camera() {
 
                 const tracks = [];
                 const audiotrack = [];
+                spinnerRef.current.style.display = 'none'
                 if (videoStream && audioStream) {
                     tracks.push(...videoStream.getVideoTracks());
                     audiotrack.push(...audioStream.getAudioTracks())
@@ -63,6 +65,7 @@ function Camera() {
                     const audioStreamOnly = new MediaStream(audiotrack);
                     setAudioStream(audioStreamOnly);
                 }
+
             }
         }
         requestUserMedia();
@@ -77,6 +80,9 @@ function Camera() {
     }, [isRecording]);
 
     const handleStartRecording = async () => {
+        chrome.runtime.sendMessage({
+            action: "startedRecording",
+        });
         const displayMediaStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
         setDisplayStream(displayMediaStream);
         const audioContext = new AudioContext();
@@ -113,7 +119,6 @@ function Camera() {
         displayMediaStream.getVideoTracks()[0].onended = async function () {
             handleStopRecording();
         };
-
         const texts = countdownRef.current.querySelectorAll("span");
 
         texts.forEach((span) => {
@@ -142,20 +147,12 @@ function Camera() {
                     vcOverlay.current.style.opacity = 0;
                     vcOverlay.current.style.visibility = 'hidden';
                     mediaRecorder.start();
-                    chrome.runtime.sendMessage({
-                        action: "startedRecording",
-                    });
+
                     setIsRecording(true);
                 }, 1000);
             }, 1000);
 
         }, 1000);
-        // mediaRecorder.start();
-        // chrome.runtime.sendMessage({
-        //     action: "startedRecording",
-        // });
-
-        // setIsRecording(true);
     };
 
     const convertBlobToBase64 = (blob) => {
@@ -201,21 +198,21 @@ function Camera() {
         }
     };
 
-    // document.addEventListener("click", async (e) => {
-    //     debugger;
-    //         var cameraElement = document.getElementById('higherOrder');
-    //         var controlsEle = document.querySelector('.vc-controls');
-    //         var controls = document.querySelector('.glass-card');
-
-    //         if ((cameraElement && !cameraElement?.contains(e.target) && !controlsEle?.contains(e.target) && !controls?.contains(e.target)) && !RecordingStarted.current) {
-    //             chrome.runtime.sendMessage({ action: "deleteCamera" });
-    //         }
-    // });
+    document.addEventListener("click", async (e) => {
+        debugger;
+        var cameraElement = document.getElementById('higherOrder');
+        var controlsEle = document.querySelector('.vc-controls');
+        var controls = document.querySelector('.glass-card');
+        if ((cameraElement && !cameraElement?.contains(e.target) && !controlsEle?.contains(e.target) && !controls?.contains(e.target)) && !RecordingStarted.current) {
+            chrome.runtime.sendMessage({ action: "deleteCamera" });
+        }
+    });
 
     return (
         <>
             <Draggable bounds='parent'>
                 <div ref={draggableRef}>
+                    <div class="spinner" ref={spinnerRef}></div>
                     <div className="circular-img" id='circular-img'>
                         <video ref={videoRef} className='getTheVideo' width="100%" height="100%" autoPlay></video>
                     </div>

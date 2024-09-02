@@ -13,7 +13,6 @@ function Preview() {
     ];
     const [selectedType, setSelectedType] = useState(videoTypes[0]);
     const downloadRef = useRef(null);
-
     const handleTypeChange = (event) => {
         setSelectedType(event.target.value);
     };
@@ -30,17 +29,29 @@ function Preview() {
         blobObject.current = new Blob([byteArray], { type: mimeType });
     }
 
+    // const downloadVideo = () => {
+    //     const videoBlob = new Blob([blobObject.current], { type: selectedType });
+    //     const url = window.URL.createObjectURL(videoBlob);
+    //     const a = document.createElement('a');
+    //     a.href = url;
+    //     a.download = 'CapturedVideo';
+    //     document.body.appendChild(a);
+    //     a.click();
+    //     document.body.removeChild(a);
+    //     window.URL.revokeObjectURL(url)
+    // }
+
     const downloadVideo = () => {
         const videoBlob = new Blob([blobObject.current], { type: selectedType });
         const url = window.URL.createObjectURL(videoBlob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'CapturedVideo';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url)
-    }
+        if (downloadRef.current) {
+            downloadRef.current.href = url;
+            downloadRef.current.download = 'CapturedVideo';
+        }
+        setTimeout(() => {
+            window.URL.revokeObjectURL(url);
+        }, 10000);
+    };
 
     chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
         debugger
@@ -55,8 +66,8 @@ function Preview() {
         <>
             <div style={{ width: '1200px', margin: '0 auto' }}>
                 <video ref={linkVideoRef} controls className='getTheVideo' width="100%" height="100%" autoPlay></video>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <select id="videoTypeSelect" value={selectedType} onChange={handleTypeChange}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px' }}>
+                    <select style={{ borderRadius: '30px', padding: '10px' }} id="videoTypeSelect" value={selectedType} onChange={handleTypeChange}>
                         {videoTypes.map((type) => (
                             <option key={type} value={type}>
                                 {type}
@@ -68,8 +79,6 @@ function Preview() {
                     </div>
                 </div>
             </div>
-
-
         </>
     )
 }

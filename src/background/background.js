@@ -72,6 +72,7 @@ chrome.action.onClicked.addListener((tab) => {
 });
 
 chrome.tabs.onActivated.addListener(function (activeInfo) {
+    debugger
     chrome.tabs.get(activeInfo.tabId, function (tab) {
         if (!tab.url.startsWith("chrome://") && !tab.url.startsWith("chrome-extension://") &&
             initalLoad && activeCurrentTab != activeInfo.tabId && startedRecording && linkTabiD == null) {
@@ -84,6 +85,7 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 });
 
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+     debugger
     if (changeInfo.status === 'complete' &&
         !tab.url.startsWith("chrome://") && !tab.url.startsWith("chrome-extension://") &&
         initalLoad && startedRecording && activeCurrentTab !== tabId && linkTabiD == null) {

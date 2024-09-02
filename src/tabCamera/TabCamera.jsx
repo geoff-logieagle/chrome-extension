@@ -40,8 +40,7 @@ function TabCamera() {
             setCameraStream(null);
         }
     }
-
-
+    
     return (
         <Draggable nodeRef={previewDraggableRef} bounds='parent'>
             <div style={{ margin: '0px !important' }} ref={previewDraggableRef}>

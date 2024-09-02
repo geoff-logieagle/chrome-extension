@@ -18,6 +18,7 @@
 #tab-camera-root .react-draggable {
     position: absolute;
     z-index: 2147482646;
+    bottom: 0px;
 }
 
 #camera-root,
@@ -363,4 +364,23 @@
     text-transform: uppercase;
     background: #f3a;
 
+}
+
+.spinner {
+    display: none;
+    position: absolute;
+    left: 43%;
+    width: 18px;
+    height: 18px;
+    border: 6px solid #000;
+    border-top-color: #ff0000;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 100px auto;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
