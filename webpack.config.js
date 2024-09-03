@@ -5,13 +5,6 @@ import path from 'path'
 export default {
     mode: 'production',
     entry: {
-        content: './src/content/content.js',
-        background: './src/background/background.js',
-        camera: './src/mainCamera/index.jsx',
-        tabcamera: './src/tabCamera/index.jsx',
-        preview: './src/previewTab/index.jsx',
-        permission: './src/MainContent/Content.jsx',
-        MainContent: './src/MainContent/index.jsx'
     },
     output: {
         path: path.resolve('dist'),
@@ -19,21 +12,6 @@ export default {
         clean: true
     },
     plugins: [
-        new HtmlWebpackPlugin({
-            template: './src/previewTab/preview.html',
-            filename: 'preview.html',
-            chunks: ['preview']
-        }),
-        new HtmlWebpackPlugin({
-            template: './src/permissionCheck/permisssion.html',
-            filename: 'permission.html',
-            chunks: ['permission']
-        }),
-        new CopyPlugin({
-            patterns: [
-                { from: path.resolve('manifest.json'), to: path.resolve('dist') }
-            ]
-        })
     ],
     devtool: 'source-map',
     module: {

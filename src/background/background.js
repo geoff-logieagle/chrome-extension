@@ -59,11 +59,6 @@ chrome.action.onClicked.addListener((tab) => {
             target: { tabId: tab.id },
             files: ['camera.js']
         }, () => {
-            chrome.scripting.executeScript({
-                target: { tabId: tab.id },
-                files: ['MainContent.js']
-            }, () => {
-            });
             activeCurrentTab = tab.id;
             initalLoad = true;
             console.log(activeCurrentTab, initalLoad);
