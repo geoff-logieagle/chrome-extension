@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
-
+import "../global.css"
 
 function CameraWrap() {
     const draggableRef = useRef(null);
@@ -214,38 +214,6 @@ function CameraWrap() {
         <>
             <div className="circular-img" id='circular-img'>
                 <video style={{ objectFit: 'cover' }} ref={videoRef} className='getTheVideo' width="100%" height="100%" autoPlay></video>
-            </div>
-            <div className="vc-controls-container">
-                <div className="inner-cntrl-cont" style={{ left: '100px', transform: 'translate(100px)' }}>
-                    <div className="vc-controls">
-                        <div className="controls-inner">
-                            {
-                                !isRecording && <button
-                                    id="startStopBtn"
-                                    onClick={handleStartRecording}
-                                >
-                                    <span className="btn-control-icon">
-                                        <svg viewBox="6 0 11.999750137329102 24" fill="none">
-                                            <path
-                                                d="M6 6.134v11.732c0 .895 1.03 1.438 1.822.951l9.628-5.866c.733-.441.733-1.46 0-1.914L7.822 5.183C7.029 4.696 6 5.239 6 6.134z"
-                                                fill="currentColor"
-                                            ></path>
-                                        </svg>
-                                    </span>
-                                </button>
-                            }
-                            {
-                                isRecording && <button
-                                    onClick={handleStopRecording}
-                                    id="cancelBtn"
-                                >
-                                    <svg viewBox="4 0 16 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="2" fill="currentColor"></rect></svg>
-                                </button>
-                            }
-
-                        </div>
-                    </div>
-                </div>
             </div>
         </>
     )
