@@ -1,6 +1,6 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import Camera from "./Camera";
+import Camera from "./Camera.jsx";
 const element = document.getElementById('camera-root');
 
 if (!element) {

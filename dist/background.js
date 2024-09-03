@@ -1,0 +1,2 @@
+(()=>{"use strict";chrome.action.onClicked.addListener((function(t){t.url.startsWith("chrome://")||t.url.startsWith("chrome-extension://")||chrome.scripting.executeScript({target:{tabId:t.id},files:["camera.js"]},(function(){activeCurrentTab=t.id,initalLoad=!0,console.log(activeCurrentTab,initalLoad)}))}))})();
+//# sourceMappingURL=background.js.map
