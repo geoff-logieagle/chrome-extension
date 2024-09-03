@@ -8,7 +8,7 @@ export default {
         content: './src/content/content.js',
         background: './src/background/background.js',
         camera: './src/Camera/index.jsx',
-        camerawrap: './src/Camera/CameraWrap.jsx'
+        camerawrap: './src/Camera/wrapindex.jsx'
     },
     output: {
         path: path.resolve('dist'),

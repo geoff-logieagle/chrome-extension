@@ -1,0 +1,23 @@
+#camera-root {
+    z-index: 2147482646;
+    position: fixed;
+    inset: 0px;
+    pointer-events: none;
+}
+
+.react-draggable {
+    position: absolute;
+    pointer-events: auto;
+}
+
+
+.camera-wrapper {
+    width: 222px;
+    height: 222px;
+    overflow: hidden;
+    user-select: none;
+    border: 0px;
+    border-radius: 50%;
+    background-color: var(--lns-color-grey4);
+    transition: width 150ms ease-out, height 150ms ease-out;
+}
