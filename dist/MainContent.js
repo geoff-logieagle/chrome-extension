@@ -1,2 +1,0 @@
-(()=>{var e=document.getElementById("camera-root"),t=document.createElement("iframe");t.src=chrome.runtime.getURL("permission.html"),t.setAttribute("allow","camera; microphone; display-capture"),e.appendChild(t)})();
-//# sourceMappingURL=MainContent.js.map

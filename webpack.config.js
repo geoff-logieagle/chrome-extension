@@ -5,6 +5,10 @@ import path from 'path'
 export default {
     mode: 'production',
     entry: {
+        content: './src/content/content.js',
+        background: './src/background/background.js',
+        camera: './src/Camera/index.jsx',
+        camerawrap: './src/Camera/CameraWrap.jsx'
     },
     output: {
         path: path.resolve('dist'),
@@ -12,6 +16,16 @@ export default {
         clean: true
     },
     plugins: [
+        new HtmlWebpackPlugin({
+            template: './src/Camera/camera.html',
+            filename: 'camera.html',
+            chunks: ['camerawrap']
+        }),
+        new CopyPlugin({
+            patterns: [
+                { from: path.resolve('manifest.json'), to: path.resolve('dist') }
+            ]
+        })
     ],
     devtool: 'source-map',
     module: {
